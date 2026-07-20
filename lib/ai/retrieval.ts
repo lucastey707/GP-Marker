@@ -1,4 +1,5 @@
- import { supabaseAdmin } from "@/lib/db";
+cat > lib/ai/retrieval.ts << 'BASHEOF'
+import { supabaseAdmin } from "@/lib/db";
 import { getEmbedding } from "@/lib/ai/voyageClient";
 
 export type RetrievedEssay = {
@@ -40,3 +41,4 @@ export async function retrieveRelevantEssays(
     similarity: row.similarity,
   }));
 }
+BASHEOF
