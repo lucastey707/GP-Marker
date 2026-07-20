@@ -1,4 +1,3 @@
-cat > package.json << 'BASHEOF'
 {
   "name": "gp-essay-marker",
   "version": "0.1.0",
@@ -9,7 +8,8 @@ cat > package.json << 'BASHEOF'
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx --env-file=.env.local lib/seed/seedModelEssays.ts",
-    "test:retrieval": "tsx --env-file=.env.local lib/seed/testRetrieval.ts"
+    "test:retrieval": "tsx --env-file=.env.local lib/seed/testRetrieval.ts",
+    "test:marking": "tsx --env-file=.env.local lib/seed/testMarking.ts"
   },
   "dependencies": {
     "next": "14.2.5",
@@ -30,4 +30,3 @@ cat > package.json << 'BASHEOF'
     "tsx": "4.16.5"
   }
 }
-BASHEOF
