@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "tsx lib/seed/seedModelEssays.ts"
+    "seed": "tsx --env-file=.env.local lib/seed/seedModelEssays.ts",
+    "test:retrieval": "tsx --env-file=.env.local lib/seed/testRetrieval.ts"
   },
   "dependencies": {
     "next": "14.2.5",
