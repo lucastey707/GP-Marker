@@ -51,6 +51,23 @@ async function main() {
   feedback.logical_fallacies.forEach((f) =>
     console.log(`- ${f.fallacy_name}: "${f.quote}"`)
   );
+console.log("\n=== WEAKEST PARAGRAPH (ORIGINAL) ===");
+  console.log(feedback.weakest_paragraph_original);
+
+  console.log("\n=== WEAKEST PARAGRAPH (REWRITE) ===");
+  console.log(feedback.weakest_paragraph_rewrite);
+
+  console.log("\n=== SUGGESTED STRONGER ARGUMENT ===");
+  console.log(feedback.suggested_stronger_argument);
+
+  console.log("\n=== NEXT BOUNDARY ===");
+  console.log(`Content: ${feedback.next_boundary_content}`);
+  console.log(`Language: ${feedback.next_boundary_language}`);
+
+  console.log("\n=== UNSUPPORTED ASSERTIONS ===");
+  feedback.unsupported_assertions.forEach((a) =>
+    console.log(`- "${a.quote}" \u2014 ${a.explanation}`)
+  );
 }
 
 main();
