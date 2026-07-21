@@ -6,8 +6,8 @@ const anthropic = new Anthropic({
 
 export async function getMarkingResponse(prompt: string): Promise<string> {
   const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 4096,
+    model: "claude-sonnet-5",
+    max_tokens: 8192,
     messages: [{ role: "user", content: prompt }],
   });
 
