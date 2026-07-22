@@ -504,4 +504,7 @@ video {
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
+.block {
+  display: block;
+}
 
