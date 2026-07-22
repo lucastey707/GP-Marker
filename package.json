@@ -12,12 +12,13 @@
     "test:marking": "tsx --env-file=.env.local lib/seed/testMarking.ts"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "next": "14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "@supabase/supabase-js": "2.45.0",
     "@anthropic-ai/sdk": "0.27.0",
-    "zod": "3.23.8"
+    "zod": "3.23.8",
+    "@supabase/ssr": "0.5.1"
   },
   "devDependencies": {
     "typescript": "5.5.4",

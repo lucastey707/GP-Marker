@@ -1,4 +1,4 @@
-// File: /workspaces/GP-Marker/GP-Marker/app/page.tsx
+// File: /workspaces/GP-Marker/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
