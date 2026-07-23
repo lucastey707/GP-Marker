@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PROTECTED_PREFIXES = ["/dashboard", "/questions", "/essays"];
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -29,7 +31,9 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isProtectedRoute = PROTECTED_PREFIXES.some((prefix) =>
+    request.nextUrl.pathname.startsWith(prefix)
+  );
 
   if (isProtectedRoute && !user) {
     const loginUrl = new URL("/login", request.url);

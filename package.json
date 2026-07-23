@@ -9,7 +9,8 @@
     "lint": "next lint",
     "seed": "tsx --env-file=.env.local lib/seed/seedModelEssays.ts",
     "test:retrieval": "tsx --env-file=.env.local lib/seed/testRetrieval.ts",
-    "test:marking": "tsx --env-file=.env.local lib/seed/testMarking.ts"
+    "test:marking": "tsx --env-file=.env.local lib/seed/testMarking.ts",
+    "seed:questions": "tsx --env-file=.env.local lib/seed/seedQuestions.ts"
   },
   "dependencies": {
     "next": "14.2.35",
