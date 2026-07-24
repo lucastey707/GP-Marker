@@ -1,12 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-// Note: this page has two entry points into essay submission --
-// picking a question below (goes through the existing-question
-// flow), or the link to /essays/new (the write-your-own-question
-// flow). Both ultimately hit the same API route and marking
-// pipeline.
-
 export default async function QuestionsPage() {
   const supabase = await createClient();
 
@@ -17,17 +11,12 @@ export default async function QuestionsPage() {
 
   if (error) {
     return (
-      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-        <p>Failed to load questions: {error.message}</p>
+      <main className="max-w-2xl mx-auto py-12 px-4">
+        <p className="font-body text-mark">Failed to load questions: {error.message}</p>
       </main>
     );
   }
 
-  // Group questions by topic so the page reads as organized
-  // sections rather than one long undifferentiated list.
-  // Student-submitted questions have no topic_category (it's
-  // nullable), so we give that group a readable label rather than
-  // showing "null" as a section heading.
   const grouped = (questions ?? []).reduce<Record<string, typeof questions>>(
     (acc, q) => {
       const key = q.topic_category ?? "Other / Uncategorized";
@@ -39,31 +28,33 @@ export default async function QuestionsPage() {
   );
 
   return (
-    <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-      <h1>Question Bank</h1>
-      <p style={{ color: "#666" }}>
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <p className="font-mono text-xs uppercase tracking-widest text-slate mb-1">
+        GP Essay Marker
+      </p>
+      <h1 className="font-display text-2xl font-bold mb-2">Question Bank</h1>
+      <p className="font-body text-slate mb-1">
         Choose a question to write an essay for.
       </p>
-      <p>
+      <p className="font-body text-sm mb-8">
         Answering a question that isn&apos;t listed here?{" "}
-        <Link href="/essays/new">Submit a new question and essay</Link>.
+        <Link href="/essays/new" className="text-ink underline">
+          Submit a new question and essay
+        </Link>.
       </p>
 
       {Object.entries(grouped).map(([topic, qs]) => (
-        <section key={topic} style={{ marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.1rem" }}>{topic}</h2>
-          <ul style={{ listStyle: "none", padding: 0 }}>
+        <section key={topic} className="mb-8">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-slate border-b border-slate/30 pb-1 mb-3">
+            {topic}
+          </h2>
+          <ul className="space-y-2">
             {qs!.map((q) => (
               <li
                 key={q.id}
-                style={{
-                  border: "1px solid #ddd",
-                  borderRadius: 8,
-                  padding: "0.75rem 1rem",
-                  marginBottom: "0.5rem",
-                }}
+                className="border border-slate/40 rounded-lg px-4 py-3 hover:border-ink transition-colors"
               >
-                <Link href={`/essays/new?questionId=${q.id}`}>
+                <Link href={`/essays/new?questionId=${q.id}`} className="font-body">
                   {q.question_text}
                 </Link>
               </li>

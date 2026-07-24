@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <p>Not logged in.</p>;
+    return <p className="font-body">Not logged in.</p>;
   }
 
   const { data: essays } = await supabase
@@ -41,40 +41,47 @@ export default async function DashboardPage() {
   const historyList = [...normalized].reverse();
 
   return (
-    <main style={{ maxWidth: 800, margin: "2rem auto", padding: "0 1rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Dashboard</h1>
+    <main className="max-w-3xl mx-auto py-12 px-4">
+      <div className="flex justify-between items-start border-b-2 border-ink pb-6 mb-8">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-widest text-slate mb-1">
+            GP Essay Marker
+          </p>
+          <h1 className="font-display text-2xl font-bold">Dashboard</h1>
+          <p className="font-body text-slate text-sm mt-1">{user.email}</p>
+        </div>
         <LogoutButton />
       </div>
-      <p>Logged in as: {user.email}</p>
 
-      <section style={{ margin: "2rem 0" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Score Over Time</h2>
+      <section className="mb-10">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-slate border-b border-slate/30 pb-1 mb-4">
+          Score Over Time
+        </h2>
         <ScoreChart data={chartData} />
       </section>
 
       <section>
-        <h2 style={{ fontSize: "1.1rem" }}>Essay History</h2>
+        <h2 className="font-mono text-xs uppercase tracking-widest text-slate border-b border-slate/30 pb-1 mb-4">
+          Essay History
+        </h2>
         {historyList.length === 0 && (
-          <p style={{ color: "#666" }}>
-            No essays yet. <Link href="/questions">Submit your first one</Link>.
+          <p className="font-body text-slate">
+            No essays yet.{" "}
+            <Link href="/questions" className="text-ink underline">
+              Submit your first one
+            </Link>.
           </p>
         )}
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="space-y-2">
           {historyList.map((essay) => (
             <li
               key={essay.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: 8,
-                padding: "0.75rem 1rem",
-                marginBottom: "0.5rem",
-              }}
+              className="border border-slate/40 rounded-lg px-4 py-3 hover:border-ink transition-colors"
             >
-              <Link href={`/essays/${essay.id}/feedback`}>
+              <Link href={`/essays/${essay.id}/feedback`} className="font-body">
                 {essay.question?.question_text ?? "Untitled question"}
               </Link>
-              <div style={{ color: "#666", fontSize: "0.9rem" }}>
+              <div className="font-mono text-xs text-slate mt-1">
                 {new Date(essay.submitted_at).toLocaleDateString("en-SG", {
                   year: "numeric",
                   month: "short",

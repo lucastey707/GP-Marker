@@ -41,20 +41,20 @@ export default function EssayEditor({ questionId }: { questionId: string }) {
   }
 
   return (
-    <div>
+    <div className="mt-6">
       <textarea
         value={essayText}
         onChange={(e) => setEssayText(e.target.value)}
         rows={20}
-        style={{ width: "100%", padding: "0.75rem", fontFamily: "inherit" }}
+        className="w-full p-4 border border-slate/40 rounded-lg bg-white font-body leading-relaxed focus:outline-none focus:ring-2 focus:ring-ink"
         placeholder="Write or paste your essay here..."
       />
-      <p style={{ color: "#666" }}>{wordCount} words</p>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <p className="font-mono text-xs text-slate mt-2">{wordCount} words</p>
+      {error && <p className="font-body text-mark text-sm mt-2">{error}</p>}
       <button
         onClick={handleSubmit}
         disabled={submitting || essayText.trim().length === 0}
-        style={{ padding: "0.75rem 1.5rem" }}
+        className="mt-4 px-6 py-3 bg-ink text-paper font-body font-semibold rounded-md hover:opacity-90 disabled:opacity-50"
       >
         {submitting
           ? "Marking your essay... this can take up to a minute"

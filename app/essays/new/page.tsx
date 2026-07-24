@@ -12,16 +12,21 @@ export default async function NewEssayPage({
 
   if (!questionId) {
     return (
-      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-        <h1>Submit a New Essay</h1>
-        <p style={{ color: "#666" }}>
+      <main className="max-w-2xl mx-auto py-12 px-4">
+        <p className="font-mono text-xs uppercase tracking-widest text-slate mb-1">
+          GP Essay Marker
+        </p>
+        <h1 className="font-display text-2xl font-bold mb-2">Submit a New Essay</h1>
+        <p className="font-body text-slate">
           Answering a question that isn&apos;t in our bank yet? Type it below
           along with your essay -- we&apos;ll mark it and add the question to
           the bank for future students.
         </p>
-        <p>
+        <p className="font-body text-sm mt-2">
           Prefer to answer an existing question instead?{" "}
-          <Link href="/questions">Browse the question bank</Link>.
+          <Link href="/questions" className="text-ink underline">
+            Browse the question bank
+          </Link>.
         </p>
         <NewQuestionEssayEditor />
       </main>
@@ -38,16 +43,21 @@ export default async function NewEssayPage({
 
   if (error || !question) {
     return (
-      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-        <p>Question not found.</p>
+      <main className="max-w-2xl mx-auto py-12 px-4">
+        <p className="font-body">Question not found.</p>
       </main>
     );
   }
 
   return (
-    <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-      <h1>Write Your Essay</h1>
-      <p style={{ fontWeight: "bold" }}>{question.question_text}</p>
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <p className="font-mono text-xs uppercase tracking-widest text-slate mb-1">
+        GP Essay Marker
+      </p>
+      <h1 className="font-display text-2xl font-bold mb-3">Write Your Essay</h1>
+      <p className="font-body font-semibold border-l-2 border-ink pl-3">
+        {question.question_text}
+      </p>
       <EssayEditor questionId={question.id} />
     </main>
   );
