@@ -11,15 +11,15 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/questions/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/questions/page.js"
+      "static/chunks/app/login/page.js"
     ],
-    "/essays/new/page": [
+    "/dashboard/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/essays/new/page.js"
+      "static/chunks/app/dashboard/page.js"
     ]
   }
 }

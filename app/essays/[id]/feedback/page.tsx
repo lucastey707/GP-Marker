@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import BandStamp from "@/components/BandStamp";
 
 export default async function FeedbackPage({
   params,
@@ -21,16 +22,18 @@ export default async function FeedbackPage({
 
   if (essay.status === "pending") {
     return (
-      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-        <p>Your essay is still being marked. Refresh in a moment.</p>
+      <main className="max-w-2xl mx-auto py-16 px-4">
+        <p className="font-body">Your essay is still being marked. Refresh in a moment.</p>
       </main>
     );
   }
 
   if (essay.status === "failed") {
     return (
-      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-        <p>Something went wrong marking this essay. Please try submitting again.</p>
+      <main className="max-w-2xl mx-auto py-16 px-4">
+        <p className="font-body text-mark">
+          Something went wrong marking this essay. Please try submitting again.
+        </p>
       </main>
     );
   }
@@ -55,64 +58,88 @@ export default async function FeedbackPage({
   );
 
   return (
-    <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
-      <h1>Your Feedback</h1>
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <div className="flex items-start justify-between border-b-2 border-ink pb-6 mb-8">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-widest text-slate mb-1">
+            Marked Essay
+          </p>
+          <h1 className="font-display text-2xl font-bold">Your Feedback</h1>
+          <p className="font-mono text-sm text-slate mt-2">
+            {feedback.overall_grade_estimate}
+          </p>
+        </div>
+        <BandStamp label="Content" band={feedback.content_band} />
+      </div>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <p>
-          <strong>Content:</strong> {feedback.content_mark}/30 (Band{" "}
-          {feedback.content_band}) &nbsp;|&nbsp;
-          <strong>Language:</strong> {feedback.language_mark}/20 (Band{" "}
-          {feedback.language_band})
-        </p>
-        <p>
-          <strong>Overall estimate:</strong> {feedback.overall_grade_estimate}
-        </p>
+      <div className="grid grid-cols-2 gap-4 mb-10">
+        <div className="border border-slate/40 rounded-lg p-4">
+          <p className="font-mono text-xs uppercase tracking-widest text-slate">Content</p>
+          <p className="font-mono text-2xl font-semibold mt-1">
+            {feedback.content_mark}<span className="text-slate text-base">/30</span>
+          </p>
+          <p className="font-mono text-xs text-slate">Band {feedback.content_band}</p>
+        </div>
+        <div className="border border-slate/40 rounded-lg p-4">
+          <p className="font-mono text-xs uppercase tracking-widest text-slate">Language</p>
+          <p className="font-mono text-2xl font-semibold mt-1">
+            {feedback.language_mark}<span className="text-slate text-base">/20</span>
+          </p>
+          <p className="font-mono text-xs text-slate">Band {feedback.language_band}</p>
+        </div>
+      </div>
+
+      <section className="mb-8">
+        <h2 className="font-display text-lg font-semibold mb-2">Summary</h2>
+        <p className="font-body leading-relaxed">{feedback.student_facing_overall_summary}</p>
       </section>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Summary</h2>
-        <p>{feedback.student_facing_overall_summary}</p>
+      <section className="mb-8">
+        <h2 className="font-display text-lg font-semibold mb-2">Content Feedback</h2>
+        <p className="font-body leading-relaxed">{feedback.student_facing_content_feedback}</p>
       </section>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Content Feedback</h2>
-        <p>{feedback.student_facing_content_feedback}</p>
-      </section>
-
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Language Feedback</h2>
-        <p>{feedback.student_facing_language_feedback}</p>
+      <section className="mb-8">
+        <h2 className="font-display text-lg font-semibold mb-2">Language Feedback</h2>
+        <p className="font-body leading-relaxed">{feedback.student_facing_language_feedback}</p>
       </section>
 
       {fallacies.length > 0 && (
-        <section style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.1rem" }}>Logical Fallacies Found</h2>
-          <ul>
+        <section className="mb-8">
+          <h2 className="font-display text-lg font-semibold mb-2">Logical Fallacies Found</h2>
+          <ul className="space-y-2">
             {fallacies.map((f) => (
-              <li key={f.id}>
-                <strong>&quot;{f.quoted_text}&quot;</strong> — {f.comment_text}
+              <li key={f.id} className="font-body border-l-2 border-mark pl-3">
+                <span className="font-semibold">&quot;{f.quoted_text}&quot;</span> — {f.comment_text}
               </li>
             ))}
           </ul>
         </section>
       )}
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Weakest Paragraph, Rewritten</h2>
-        <p style={{ color: "#666" }}>{feedback.weakest_paragraph_original}</p>
-        <p>{feedback.weakest_paragraph_rewrite}</p>
+      <section className="mb-8">
+        <h2 className="font-display text-lg font-semibold mb-2">Weakest Paragraph, Rewritten</h2>
+        <p className="font-body text-slate italic mb-3">{feedback.weakest_paragraph_original}</p>
+        <p className="font-body leading-relaxed border-l-2 border-approved pl-3">
+          {feedback.weakest_paragraph_rewrite}
+        </p>
       </section>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem" }}>Suggested Stronger Argument</h2>
-        <p>{feedback.suggested_stronger_argument}</p>
+      <section className="mb-8">
+        <h2 className="font-display text-lg font-semibold mb-2">Suggested Stronger Argument</h2>
+        <p className="font-body leading-relaxed">{feedback.suggested_stronger_argument}</p>
       </section>
 
-      <details>
-        <summary>Examiner Reasoning (Content: Band {feedback.content_band}, Language: Band {feedback.language_band})</summary>
-        <p><strong>Next boundary, Content:</strong> {feedback.next_boundary_content}</p>
-        <p><strong>Next boundary, Language:</strong> {feedback.next_boundary_language}</p>
+      <details className="font-body border-t border-slate/30 pt-4">
+        <summary className="cursor-pointer font-mono text-sm uppercase tracking-wide text-slate">
+          Examiner Reasoning
+        </summary>
+        <p className="mt-3">
+          <strong>Next boundary, Content:</strong> {feedback.next_boundary_content}
+        </p>
+        <p className="mt-2">
+          <strong>Next boundary, Language:</strong> {feedback.next_boundary_language}
+        </p>
       </details>
     </main>
   );
