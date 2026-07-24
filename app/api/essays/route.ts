@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/db";
 import { markEssay } from "@/lib/ai/markEssay";
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const supabase = await createClient();
