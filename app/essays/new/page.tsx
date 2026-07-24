@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import EssayEditor from "@/components/EssayEditor";
-import { redirect } from "next/navigation";
+import NewQuestionEssayEditor from "@/components/NewQuestionEssayEditor";
+import Link from "next/link";
 
 export default async function NewEssayPage({
   searchParams,
@@ -10,7 +11,21 @@ export default async function NewEssayPage({
   const { questionId } = await searchParams;
 
   if (!questionId) {
-    redirect("/questions");
+    return (
+      <main style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem" }}>
+        <h1>Submit a New Essay</h1>
+        <p style={{ color: "#666" }}>
+          Answering a question that isn&apos;t in our bank yet? Type it below
+          along with your essay -- we&apos;ll mark it and add the question to
+          the bank for future students.
+        </p>
+        <p>
+          Prefer to answer an existing question instead?{" "}
+          <Link href="/questions">Browse the question bank</Link>.
+        </p>
+        <NewQuestionEssayEditor />
+      </main>
+    );
   }
 
   const supabase = await createClient();

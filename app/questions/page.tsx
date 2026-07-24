@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
+// Note: this page has two entry points into essay submission --
+// picking a question below (goes through the existing-question
+// flow), or the link to /essays/new (the write-your-own-question
+// flow). Both ultimately hit the same API route and marking
+// pipeline.
+
 export default async function QuestionsPage() {
   const supabase = await createClient();
 
@@ -17,9 +23,14 @@ export default async function QuestionsPage() {
     );
   }
 
+  // Group questions by topic so the page reads as organized
+  // sections rather than one long undifferentiated list.
+  // Student-submitted questions have no topic_category (it's
+  // nullable), so we give that group a readable label rather than
+  // showing "null" as a section heading.
   const grouped = (questions ?? []).reduce<Record<string, typeof questions>>(
     (acc, q) => {
-      const key = q.topic_category;
+      const key = q.topic_category ?? "Other / Uncategorized";
       if (!acc[key]) acc[key] = [];
       acc[key]!.push(q);
       return acc;
@@ -32,6 +43,10 @@ export default async function QuestionsPage() {
       <h1>Question Bank</h1>
       <p style={{ color: "#666" }}>
         Choose a question to write an essay for.
+      </p>
+      <p>
+        Answering a question that isn&apos;t listed here?{" "}
+        <Link href="/essays/new">Submit a new question and essay</Link>.
       </p>
 
       {Object.entries(grouped).map(([topic, qs]) => (

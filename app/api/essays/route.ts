@@ -13,20 +13,75 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
 
-  const { questionId, essayText } = await request.json();
+  const { questionId, questionText: submittedQuestionText, essayText } = await request.json();
 
-  if (!questionId || !essayText || typeof essayText !== "string") {
-    return NextResponse.json({ error: "Missing questionId or essayText." }, { status: 400 });
+  if (!essayText || typeof essayText !== "string") {
+    return NextResponse.json({ error: "Missing essayText." }, { status: 400 });
   }
 
-  const { data: question, error: questionError } = await supabaseAdmin
-    .from("questions")
-    .select("question_text")
-    .eq("id", questionId)
-    .single();
+  if (!questionId && !submittedQuestionText) {
+    return NextResponse.json(
+      { error: "Provide either questionId or questionText." },
+      { status: 400 }
+    );
+  }
 
-  if (questionError || !question) {
-    return NextResponse.json({ error: "Question not found." }, { status: 404 });
+  let resolvedQuestionId: string;
+  let resolvedQuestionText: string;
+
+  if (questionId) {
+    const { data: question, error: questionError } = await supabaseAdmin
+      .from("questions")
+      .select("id, question_text")
+      .eq("id", questionId)
+      .single();
+
+    if (questionError || !question) {
+      return NextResponse.json({ error: "Question not found." }, { status: 404 });
+    }
+
+    resolvedQuestionId = question.id;
+    resolvedQuestionText = question.question_text;
+  } else {
+    const trimmedQuestionText = submittedQuestionText.trim();
+
+    if (trimmedQuestionText.length < 10) {
+      return NextResponse.json(
+        { error: "Question text is too short." },
+        { status: 400 }
+      );
+    }
+
+    const { data: existingQuestion } = await supabaseAdmin
+      .from("questions")
+      .select("id, question_text")
+      .ilike("question_text", trimmedQuestionText)
+      .maybeSingle();
+
+    if (existingQuestion) {
+      resolvedQuestionId = existingQuestion.id;
+      resolvedQuestionText = existingQuestion.question_text;
+    } else {
+      const { data: newQuestion, error: insertError } = await supabaseAdmin
+        .from("questions")
+        .insert({
+          question_text: trimmedQuestionText,
+          topic_category: null,
+          source: "Student submitted",
+        })
+        .select("id, question_text")
+        .single();
+
+      if (insertError || !newQuestion) {
+        return NextResponse.json(
+          { error: "Failed to add new question to the bank." },
+          { status: 500 }
+        );
+      }
+
+      resolvedQuestionId = newQuestion.id;
+      resolvedQuestionText = newQuestion.question_text;
+    }
   }
 
   const wordCount = essayText.trim().split(/\s+/).filter(Boolean).length;
@@ -35,7 +90,7 @@ export async function POST(request: Request) {
     .from("essays")
     .insert({
       user_id: user.id,
-      question_id: questionId,
+      question_id: resolvedQuestionId,
       essay_text: essayText,
       word_count: wordCount,
       status: "pending",
@@ -49,7 +104,7 @@ export async function POST(request: Request) {
 
   try {
     const feedback = await markEssay({
-      questionText: question.question_text,
+      questionText: resolvedQuestionText,
       studentEssay: essayText,
     });
 
