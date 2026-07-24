@@ -507,6 +507,9 @@ video {
 .block {
   display: block;
 }
+.flex {
+  display: flex;
+}
 .border {
   border-width: 1px;
 }
